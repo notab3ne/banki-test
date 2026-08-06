@@ -1,7 +1,7 @@
 <template>
-  <div class="card">
+  <div class="card" :class="{ 'card--sold': product.sold }">
     <div class="card__image-wrap" @click="$emit('open-modal', product)">
-      <img class="card__image" :src="product.image" :alt="product.name" />
+      <img class="card__image" :src="product.images[0]" :alt="product.name" />
     </div>
 
     <div class="card__divider"></div>
@@ -13,16 +13,28 @@
 
       <div class="card__footer">
         <div class="card__price">
-          <span v-if="product.oldPrice" class="card__price-old">
-            {{ formatPrice(product.oldPrice) }}
-          </span>
-          <span class="card__price-current">
-            {{ formatPrice(product.price) }}
-          </span>
+          <template v-if="product.sold">
+            <span class="card__price-current">Продана на аукционе</span>
+          </template>
+          <template v-else>
+            <span v-if="product.oldPrice" class="card__price-old">
+              {{ formatPrice(product.oldPrice) }}
+            </span>
+            <span class="card__price-current">{{ formatPrice(product.price) }}</span>
+          </template>
         </div>
 
-        <DefaultButton class="card__btn" :type="buttonType" @click="handleBuy">
+        <DefaultButton
+          v-if="!product.sold"
+          class="card__btn"
+          :type="buttonType"
+          @click="handleBuy"
+          @mouseenter.native="isHovered = true"
+          @mouseleave.native="isHovered = false"
+        >
           <DefaultSpinner v-if="isProcessing" />
+          <CheckIcon v-if="isInCart && !isHovered" class="card__check-icon" />
+
           {{ buttonLabel }}
         </DefaultButton>
       </div>
@@ -33,75 +45,38 @@
 <script>
 import DefaultButton from "@/components/ui/DefaultButton"
 import DefaultSpinner from "@/components/ui/DefaultSpinner"
+import CheckIcon from "@/assets/icons/check.svg"
+import { cartMixin } from "@/mixins/cartMixin"
 import { formatPrice } from "@/utils/formatPrice"
-
-const CART_KEY = "cart"
 
 export default {
   name: "ProductCard",
-  components: { DefaultButton, DefaultSpinner },
+  components: { DefaultButton, DefaultSpinner, CheckIcon },
+  mixins: [cartMixin],
   props: {
     product: {
       type: Object,
       required: true
     }
   },
-  data() {
-    return {
-      isInCart: false,
-      isProcessing: false
-    }
-  },
-  computed: {
-    buttonType() {
-      if (this.isInCart) return "cart"
-      if (this.isProcessing) return "disabled"
-      return "primary"
-    },
-    buttonLabel() {
-      if (this.isInCart) return "В корзине"
-      if (this.isProcessing) return "Обрабатывается"
-      return "Купить"
-    }
-  },
-  created() {
-    const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]")
-    this.isInCart = cart.includes(this.product.id)
-  },
   methods: {
-    formatPrice,
-    handleBuy() {
-      if (this.isProcessing) return
-
-      if (this.isInCart) {
-        this.isInCart = false
-        this.saveCart(this.product.id, false)
-        return
-      }
-
-      this.isProcessing = true
-      setTimeout(() => {
-        this.isProcessing = false
-        this.isInCart = true
-        this.saveCart(this.product.id, true)
-      }, 2000)
-    },
-    saveCart(id, add) {
-      const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]")
-      const updated = add ? [...new Set([...cart, id])] : cart.filter((i) => i !== id)
-      localStorage.setItem(CART_KEY, JSON.stringify(updated))
-    }
+    formatPrice
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .card {
   background: $color-bg;
-  width: 280px;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  border: 1px solid $color-card-border;
+
+  &--sold {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
   &__image-wrap {
     width: 100%;
@@ -131,7 +106,7 @@ export default {
   }
 
   &__body {
-    padding: 16px 24px 24px;
+    padding: 11px 24px 24px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -157,6 +132,7 @@ export default {
     justify-content: space-between;
     gap: 8px;
     margin-top: 16px;
+    height: 48px;
   }
 
   &__price {
@@ -164,6 +140,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     gap: 4px;
+    height: 100%;
   }
 
   &__price-old {
@@ -182,6 +159,14 @@ export default {
   }
 
   &__btn {
+    flex-shrink: 0;
+    width: 118px;
+  }
+
+  &__check-icon {
+    width: 14px;
+    height: 11px;
+    display: inline-block;
     flex-shrink: 0;
   }
 }

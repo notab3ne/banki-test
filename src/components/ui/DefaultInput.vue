@@ -7,12 +7,24 @@
       type="text"
       @input="$emit('input', $event.target.value)"
     />
+    <button v-if="value" class="input__clear" type="button" @click="onClear">
+      <CloseIcon />
+    </button>
   </div>
 </template>
 
 <script>
+import CloseIcon from "@/assets/icons/close.svg"
+
 export default {
   name: "DefaultInput",
+  components: { CloseIcon },
+  methods: {
+    onClear() {
+      this.$emit("input", "")
+      this.$emit("clear")
+    }
+  },
   props: {
     value: {
       type: String,
@@ -27,13 +39,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .input {
   display: flex;
   align-items: center;
-  border: 1px solid $color-border;
   height: 48px;
   background: $color-bg;
+  width: 100%;
 
   &__field {
     flex: 1;
@@ -50,6 +61,25 @@ export default {
 
     &::placeholder {
       color: #9f9f9f;
+    }
+  }
+
+  &__clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $color-text-light;
+    padding: 0;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $color-text;
     }
   }
 }

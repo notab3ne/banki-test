@@ -5,17 +5,13 @@
     :disabled="type === 'disabled'"
     @click="$emit('click', $event)"
   >
-    <CheckIcon v-if="type === 'cart'" class="btn__icon" />
     <slot />
   </button>
 </template>
 
 <script>
-import CheckIcon from "@/assets/icons/check.svg"
-
 export default {
   name: "DefaultButton",
-  components: { CheckIcon },
   props: {
     type: {
       type: String,
@@ -26,7 +22,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -58,7 +53,6 @@ export default {
 
   &--cart {
     background: $color-btn-cart;
-    cursor: default;
   }
 
   &__icon {
