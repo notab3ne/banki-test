@@ -62,6 +62,32 @@ export default {
     gap: 75px;
   }
 
+  @media (max-width: $bp-desktop) {
+    &__container {
+      height: auto;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 32px;
+      padding-bottom: 32px;
+      gap: 32px;
+    }
+
+    &__nav {
+      padding-left: 0;
+    }
+
+    ::v-deep .nav__menu {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    &__contacts {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+  }
+
   &__contact {
     display: flex;
     align-items: center;

@@ -6,11 +6,13 @@
     </main>
     <AppFooter />
 
-    <ProductModal
-      v-if="selectedProduct"
-      :product="selectedProduct"
-      @close="selectedProduct = null"
-    />
+    <transition name="product-modal">
+      <ProductModal
+        v-if="selectedProduct"
+        :product="selectedProduct"
+        @close="selectedProduct = null"
+      />
+    </transition>
   </div>
 </template>
 
@@ -53,5 +55,24 @@ body {
 
 .main {
   flex: 1;
+}
+
+/* ProductModal transition */
+.product-modal-enter-active,
+.product-modal-leave-active {
+  transition: opacity 0.25s ease;
+
+  .modal__content {
+    transition: transform 0.25s ease;
+  }
+}
+
+.product-modal-enter,
+.product-modal-leave-to {
+  opacity: 0;
+
+  .modal__content {
+    transform: translateY(32px);
+  }
 }
 </style>

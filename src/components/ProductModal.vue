@@ -20,6 +20,7 @@
 
       <div class="modal__body">
         <h2 class="modal__title">{{ product.name }}</h2>
+
         <p class="modal__description">{{ product.description }}</p>
 
         <div class="modal__footer">
@@ -104,11 +105,12 @@ export default {
   &__content {
     background: $color-bg;
     display: flex;
+    flex-wrap: wrap;
     max-width: 980px;
     width: 100%;
     position: relative;
     max-height: 90vh;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   &__close {
@@ -135,11 +137,13 @@ export default {
   }
 
   &__slider {
-    flex-shrink: 0;
+    flex: 0 0 55%;
+    min-width: 300px;
+    max-width: 100%;
     align-self: stretch;
     overflow: hidden;
     position: relative;
-    max-width: 55%;
+    aspect-ratio: 4 / 3;
   }
 
   &__image {
@@ -153,6 +157,7 @@ export default {
     padding: 40px 32px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     overflow-y: auto;
   }
 
@@ -217,7 +222,7 @@ export default {
 }
 
 .swiper-slide {
-  width: auto !important;
+  width: 100%;
   height: 100%;
 }
 
@@ -239,21 +244,28 @@ export default {
 
 @media (max-width: $bp-tablet) {
   .modal {
-    padding: 0;
-    align-items: flex-end;
-
-    &__content {
-      flex-direction: column;
-      max-height: 95vh;
-      width: 100%;
-    }
+    padding: 16px;
 
     &__slider {
-      flex: 0 0 220px;
+      flex: 0 0 100%;
     }
 
     &__body {
-      padding: 24px 20px;
+      flex: 0 0 100%;
+      padding: 20px 16px 24px;
+    }
+
+    &__close {
+      top: 8px;
+      right: 8px;
+    }
+  }
+}
+
+@media (max-width: $bp-mobile) {
+  .modal {
+    &__title {
+      font-size: 18px;
     }
   }
 }

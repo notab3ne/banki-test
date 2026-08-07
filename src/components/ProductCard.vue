@@ -80,7 +80,7 @@ export default {
 
   &__image-wrap {
     width: 100%;
-    height: 168px;
+    aspect-ratio: 5 / 3;
     overflow: hidden;
     cursor: pointer;
     flex-shrink: 0;

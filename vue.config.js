@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: process.env.NODE_ENV === "production" ? "/banki-test/" : "/",
   devServer: {
     watchOptions: {
       poll: 500,

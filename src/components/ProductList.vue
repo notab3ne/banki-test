@@ -81,7 +81,7 @@ export default {
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 32px;
     position: relative;
   }
@@ -100,17 +100,5 @@ export default {
 }
 .cards-leave-to {
   opacity: 0;
-}
-
-@media (max-width: $bp-desktop) {
-  .catalog__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: $bp-tablet) {
-  .catalog__grid {
-    grid-template-columns: 1fr;
-  }
 }
 </style>
